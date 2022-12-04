@@ -6,6 +6,8 @@ const router = express.Router(); // function inside express that creates routes
 
 router.get('/signup', authController.getSignup);
 
+router.post('/signup', authController.signup);
+
 router.get('/login', authController.getLogin);
 
 
