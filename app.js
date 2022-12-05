@@ -1,8 +1,10 @@
 const path = require('path');
 
 const express = require('express');
+const csrf = require('csurf');
 
 const db = require('./data/database');
+const addCsrfTokenMiddleware = require('./middlewares/csrf-token');
 const authRoutes = require('./routes/auth.routes');
 
 const app = express();
@@ -12,6 +14,10 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.static('public'));
 app.use(express.urlencoded({extended: false})); // handle the form submit (e.g.'listen to req.body')
+
+app.use(csrf()); // generates the csrf token and check incomming requests
+
+app.use(addCsrfTokenMiddleware); // distributes the generated token to all templates
 
 app.use(authRoutes);
 
