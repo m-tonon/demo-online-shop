@@ -1,4 +1,5 @@
-const User = require('../models/user.model.js');
+const User = require('../models/user.model');
+const authUtil = require('../util/authentication');
 
 function getSignup(req, res) {
   res.render('customer/auth/signup');
@@ -41,7 +42,9 @@ async function login(req, res) {
     return;
   }
 
-  
+  authUtil.createUserSession(req, existingUser, function() {
+    res.redirect('/');
+  })
 
 }
 
