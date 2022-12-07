@@ -6,7 +6,7 @@ function checkAuthStatus(req, res, next) {
   }
   
   res.locals.uid = uid; // make available in all the templates
-  res.locals.isAuth = false;
+  res.locals.isAuth = true;
   next();
 }
 
