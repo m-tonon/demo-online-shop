@@ -8,6 +8,7 @@ const createSessionConfig = require('./config/session');
 const db = require('./data/database');
 const addCsrfTokenMiddleware = require('./middlewares/csrf-token');
 const errorHandlerMiddleware = require('./middlewares/error-handler');
+const checkAuthStatusMiddleware = require('./middlewares/check-auth');
 const authRoutes = require('./routes/auth.routes');
 const productsRoutes = require('./routes/products.routes');
 const baseRoutes = require('./routes/base.routes');
@@ -23,14 +24,14 @@ app.use(express.urlencoded({extended: false})); // handle the form submit (e.g.'
 const sessionConfig = createSessionConfig();
 
 app.use(expressSession(sessionConfig));
-
 app.use(csrf()); // generates the csrf token and check incomming requests
 
 app.use(addCsrfTokenMiddleware); // distributes the generated token to all templates
+app.use(checkAuthStatusMiddleware);
 
-app.use(authRoutes);
 app.use(baseRoutes);
-app.use(productsRoutes).
+app.use(authRoutes);
+app.use(productsRoutes);
 
 app.use(errorHandlerMiddleware);
 
