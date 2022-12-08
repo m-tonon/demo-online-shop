@@ -3,7 +3,9 @@ function isEmpty(value) {
 }
 
 function userCredentialsAreValid(email, password) {
-  email && email.includes('@') && password && password.trim().length >= 6;
+  return (
+    email && email.includes('@') && password && password.trim().length >= 6
+  );
 }
 
 function userDetailsAreValid(email, password, name, street, postal, city) {

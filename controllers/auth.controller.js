@@ -4,14 +4,32 @@ const validation = require('../util/validation');
 const sessionFlash = require('../util/session-flash');
 
 function getSignup(req, res) {
-  res.render('customer/auth/signup');
+  let sessionData = sessionFlash.getSessionData(req);
+
+  if (!sessionData) {
+    sessionData = {
+      email: '',
+      confirmEmail: '',
+      password: '',
+      fullname: '',
+      street: '',
+      postal: '',
+      city: ''
+    }
+
+  }
+
+  res.render('customer/auth/signup', { inputData: sessionData }); 
+  // this 'inputData' object is the default empty values or the data stored into the session
+  // which will be used on the templates
 }
 
 async function signup(req, res, next) {
   const enteredData = {
     email: req.body.email,
+    confirmEmail: req.body['confirm-email'],
     password: req.body.password,
-    name: req.body.fullname,
+    fullname: req.body.fullname,
     street: req.body.street,
     postal: req.body.postal,
     city: req.body.city
@@ -32,7 +50,7 @@ async function signup(req, res, next) {
       req,
       {
         errorMessage:
-          'Please check your input. Password must be at least 6 characters long, postal code must be 5 characters long.',
+          'Please check your input. Password must be at least 6 characters long and postal code must be 5 characters long.',
         ...enteredData // take all the keys values and added here, in this object
       },
       function () {
@@ -53,14 +71,14 @@ async function signup(req, res, next) {
   );
 
   try {
-    const existsAlready = user.existsAlready();
+    const existsAlready = await user.existsAlready();
 
     if (existsAlready) {
 
       sessionFlash.flashDataToSession(req, {
         errorMessage: 'User exists already! Try loggin instead!',
         ...enteredData,
-      },         
+      },
         function(){
         res.redirect('/signup');
       })
@@ -69,6 +87,7 @@ async function signup(req, res, next) {
     }
 
     await user.signup(); // stores the user into the database
+    
   } catch (error) {
     next(error); // this returns the default error handler, then it handle the 500 page
     return;
@@ -80,7 +99,16 @@ async function signup(req, res, next) {
 }
 
 function getLogin(req, res) {
-  res.render('customer/auth/login');
+  let sessionData = sessionFlash.getSessionData(req);
+
+  if (!sessionData) {
+    sessionData = {
+      email: '',
+      password: ''
+    }
+  }
+
+  res.render('customer/auth/login', { inputData: sessionData } );
 }
 
 async function login(req, res, next) {
