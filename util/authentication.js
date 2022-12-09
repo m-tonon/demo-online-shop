@@ -1,5 +1,6 @@
 function createUserSession(req, user, action) { 
   req.session.uid = user._id.toString(); // '.session' is avaliable by the express-session package
+  req.session.isAdm = user.isAdm; // stores the isAdm key from the blueprint to the session
   req.session.save(action); // the action will be activated once the session is sucessfully saved 
 }
 
