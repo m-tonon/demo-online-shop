@@ -75,9 +75,13 @@ main {
   width: 100%;
   /* take the full width of the parental element (body) */
   background-color: var(--color-gray-700);
-  display: flex;
+  display: none; /* always none by default and will be changed with JS */
   flex-direction: column;
   align-items: center;
+}
+
+#mobile-menu.open { /* written all together = condition #mobile-menu && .open */
+  display: flex;
 }
 
 #mobile-menu nav {
@@ -128,7 +132,6 @@ main {
     flex-direction: row;
   }
 
-  .nav-items a,
   .nav-items a {
     padding: var(--space-2) var(--space-4);
     border-radius: var(--border-radius-small);
