@@ -20,6 +20,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.static('public'));
+app.use('/products/assets', express.static('product-data')); // only request that starts with that filter (1st parameter)
 app.use(express.urlencoded({extended: false})); // handle the form submit (e.g.'listen to req.body')
 
 const sessionConfig = createSessionConfig();
