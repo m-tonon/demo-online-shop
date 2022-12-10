@@ -1,18 +1,18 @@
-<%- include('../../shared/includes/head', { pageTitle: 'Product Administration' }) %> 
+<%- include('../../shared/includes/head', { pageTitle: 'Add New Product' }) %> 
 <link rel="stylesheet" href="/styles/forms.css">
 </head>
 <body>
   <%- include('../../shared/includes/header') %> 
   <main>
     <h1>Add New Product</h1>
-    <form action="" method="">
+    <form action="/admin/products?_csrf=<%= locals.csrfToken %>" method="POST" enctype="multipart/form-data">
       <p>
         <label for="title">Title</label>
         <input type="text" id="title" name="title" require>
       </p>
       <p>
         <label for="title">Image</label>
-        <input type="file" id="image" name="image" accept="image/png,image/jpg">
+        <input type="file" id="image" name="image" accept="image/jpg,image/png">
       </p>
       <p>
         <label for="summary">Summary</label>
