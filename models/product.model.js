@@ -9,10 +9,7 @@ class Product {
     this.price = +productData.price; // '+' forces a conversion to number
     this.description = productData.description;
     this.image = productData.image; // the name of the image file
-    this.imagePath = `product-data/images/${productData.image}`;
-    this.imageUrl = `/products/assets/images/${productData.image}`; // request the image from the server
-    // this '/products/assets' is used just for filtering the serving file @ app.js later
-    // the advantage is that it dont give any hint of the structure we have on the server
+    this.updateImageData(); 
     if (productData._id) { // stores the id if have one
       this.id = productData._id.toString();
     }
@@ -36,7 +33,8 @@ class Product {
       throw error;
     }
 
-    return product;
+    // return product; // this will return _id but not the .id to be used on the template
+    return new Product(product); // this actually will return .id by the constructor
   }
 
   static async findAll () { //to fetch a products list - static can be used itself
@@ -52,6 +50,13 @@ class Product {
     }); 
   }
 
+  updateImageData() {
+    this.imagePath = `product-data/images/${this.image}`;
+    this.imageUrl = `/products/assets/images/${this.image}`; // request the image from the server
+    // this '/products/assets' is used just for filtering the serving file @ app.js later
+    // the advantage is that it dont give any hint of the structure we have on the server
+  }
+
   async save() {
     const productData = {
       title: this.title,
@@ -61,8 +66,25 @@ class Product {
       image: this.image
     };
 
-    await db.getDb().collection('products').insertOne(productData);
+    if (this.id) { // for updating a new image
+      const productId = new mongodb.ObjectId(this.id); // because this.id isnt an object
+
+      if(!this.image) { // For dont overwrite the data if the image wasnt change on the update
+        delete productData.image; // delete will remove the .image key-value pair
+      }
+
+      await db.getDb().collection('products').updateOne({_id: productId},{
+        $set: productData // update all the data from productData on the database
+      });
+    } else {
+      await db.getDb().collection('products').insertOne(productData);
+    }
   } 
+
+  async replaceImage(newImage) { // newImage is the name of the image
+    this.image = newImage;
+    this.updateImageData();
+  }
 
 }
 
