@@ -70,7 +70,8 @@ async function deleteProduct (req,res,next) {
     return;
   }
 
-  res.redirect('/admin/produts');
+  // res.redirect('/admin/produts'); --> javascript driven request doesnt support redirection 
+  res.json({ message: 'Deleted product!' });
 }
 
 module.exports = {
