@@ -17,3 +17,20 @@ textarea {
   border: none;
   width: 90%;
 }
+
+#img-upload-control {
+  display: flex; /* set the objects in the same row */
+  align-items: center;
+}
+
+#img-upload-control input {
+  max-width: 15rem;
+}
+
+#img-upload-control img {
+  display: none;
+  width: 4rem;
+  height: 4rem;
+  object-fit: cover;
+  border-radius: var(--border-radius-small);
+}
