@@ -13,7 +13,7 @@ async function addCartItem (req, res, next) {
   const cart = res.locals.cart;
 
   cart.addItem(product);
-  res.session.cart = cart;
+  req.session.cart = cart;
 
   res.status(201).json({
     message: 'Cart updated!',
