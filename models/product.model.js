@@ -17,7 +17,6 @@ class Product {
 
   static async findById(productId) {
     let prodId
-
     try {
       prodId = new mongodb.ObjectId(productId)
     } catch (error) {
@@ -25,7 +24,10 @@ class Product {
       throw error;
     }
 
-    const product = await db.getDb().collection('products').findOne({ _id: prodId});
+    const product = await db
+      .getDb()
+      .collection('products')
+      .findOne({ _id: prodId});
     
     if(!product) {
       const error = new Error('Could not find product with provided id.');
@@ -73,15 +75,18 @@ class Product {
         delete productData.image; // delete will remove the .image key-value pair
       }
 
-      await db.getDb().collection('products').updateOne({_id: productId},{
-        $set: productData // update all the data from productData on the database
-      });
+      await db.getDb().collection('products').updateOne(
+        { _id: productId },
+        {
+          $set: productData, // update all the data from productData on the database
+        }
+      );
     } else {
       await db.getDb().collection('products').insertOne(productData);
     }
   } 
 
-  async replaceImage(newImage) { // newImage is the name of the image
+  replaceImage(newImage) { // newImage is the name of the image
     this.image = newImage;
     this.updateImageData();
   }
