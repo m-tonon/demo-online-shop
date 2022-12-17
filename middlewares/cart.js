@@ -15,7 +15,7 @@ function initializeCart(req, res, next) {
     );
   }
 
-  res.locals.cart = cart;
+  res.locals.cart = cart; // make cart avaliable on the locals property
 
   next();
 }
