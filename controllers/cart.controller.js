@@ -25,7 +25,25 @@ async function addCartItem (req, res, next) {
   });
 };
 
+function updateCartItem (req, res) {
+  const cart = res.locals.cart; // get access to the cart 
+
+  const updatedItemData = cart.updateItem(req.body.productid, req.body.quantity) //method created at cart.model - update the cart item
+
+  req.session.cart = cart // saves all into the session
+
+  res.json({
+    message: 'Item updated!',
+    updatedCartData: {
+      newTotalQuantity: cart.totalQuantity,
+      newTotalPrice: cart.totalPrice,
+      updatedItemPrice: updatedItemData.updatedItemPrice // a cart.controller property
+    }
+  })
+};
+
 module.exports = {
   getCart: getCart,
   addCartItem: addCartItem,
+  updateCartItem: updateCartItem
 }

@@ -30,6 +30,31 @@ class Cart {
     this.totalQuantity++;
     this.totalPrice += product.price;
   }
-}
+
+  updateItem(productId, newQuantity) {
+
+    for (let i = 0; i < this.items.length; i++) { // loop for all the items from the cart
+      const item = this.items[i];
+
+      if (item.product.id === productId && newQuantity > 0) { // then check if the item.product.id matches the productId 'informed' & if its a positive number
+        const cartItem = {...item}; // cartItem helper const which copy the item I found (const item above) and create a new cartItem
+        const quantityChange = newQuantity - item.quantity; // the difference between the old and the new quantity (can be negative or positive)
+        cartItem.quantity = newQuantity; // then set the new quantity from the input
+        cartItem.totalPrice = newQuantity * product.price; // & multiplied by the new quantity
+        this.items[i] = cartItem; // then replace the old cart item with that new item 
+
+        this.totalQuantity = this.totalQuantity + quantityChange;
+        this.totalPrice += quantityChange * product.price; // the older this.totalPrice + (quantityChange * product.price)
+        return { updatedItemPrice: cartItem.totalPrice }; // returns the totalPrice saved to be used into the cart.controller
+
+      } else if (item.product.id === productId && newQuantity <= 0) { // if quantity is negative
+        this.items.splice(i, 1);// removes an item with a specific index & the number of items that should be removed
+        this.totalQuantity -= item.quantity; 
+        this.totalPrice -= item.totalPrice; 
+        return { updatedItemPrice: 0 }; // removes the price
+      }
+    }
+  }
+};
 
 module.exports = Cart;
