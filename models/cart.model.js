@@ -40,11 +40,11 @@ class Cart {
         const cartItem = {...item}; // cartItem helper const which copy the item I found (const item above) and create a new cartItem
         const quantityChange = newQuantity - item.quantity; // the difference between the old and the new quantity (can be negative or positive)
         cartItem.quantity = newQuantity; // then set the new quantity from the input
-        cartItem.totalPrice = newQuantity * product.price; // & multiplied by the new quantity
+        cartItem.totalPrice = newQuantity * item.product.price; // & multiplied by the new quantity
         this.items[i] = cartItem; // then replace the old cart item with that new item 
 
         this.totalQuantity = this.totalQuantity + quantityChange;
-        this.totalPrice += quantityChange * product.price; // the older this.totalPrice + (quantityChange * product.price)
+        this.totalPrice += quantityChange * item.product.price; // the older this.totalPrice + (quantityChange * product.price)
         return { updatedItemPrice: cartItem.totalPrice }; // returns the totalPrice saved to be used into the cart.controller
 
       } else if (item.product.id === productId && newQuantity <= 0) { // if quantity is negative

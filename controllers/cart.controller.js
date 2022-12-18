@@ -28,7 +28,9 @@ async function addCartItem (req, res, next) {
 function updateCartItem (req, res) {
   const cart = res.locals.cart; // get access to the cart 
 
-  const updatedItemData = cart.updateItem(req.body.productid, req.body.quantity) //method created at cart.model - update the cart item
+  const updatedItemData = cart.updateItem(
+    req.body.productId, 
+    req.body.quantity) //method created at cart.model - update the cart item
 
   req.session.cart = cart // saves all into the session
 
@@ -37,7 +39,7 @@ function updateCartItem (req, res) {
     updatedCartData: {
       newTotalQuantity: cart.totalQuantity,
       newTotalPrice: cart.totalPrice,
-      updatedItemPrice: updatedItemData.updatedItemPrice // a cart.controller property
+      updatedItemPrice: updatedItemData.updatedItemPrice, // a cart.controller property
     }
   })
 };
