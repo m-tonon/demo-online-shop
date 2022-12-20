@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const mongodb = require('mongodb');
 
 const db = require('../data/database');
 
@@ -11,6 +12,16 @@ class User { // define a blueprint
       street: street, 
       postalCode: postal, 
       city: city}
+  }
+
+  static findById(userId) { // it gives the user document for the orders
+    const uid = new mongodb.ObjectId(userId);
+
+    return db
+    .getDb()
+    .collection('users')
+    .findOne({_id: uid},{projection: { password: 0 }}); // 0 exclude that key from the query, it wont get it
+    // the second parameter is a configuration object which has the projection key
   }
 
   getUserWithSameEmail() {

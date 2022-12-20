@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.post('/', ordersController.addOrder); // path= /orders/
 
+router.get('/', ordersController.getOrders);
 
 module.exports = router;
