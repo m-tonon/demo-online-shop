@@ -1,12 +1,14 @@
-const uṕdateOrderFormElements = document.querySelectorAll(
+const e = require("express");
+
+const updateOrderFormElements = document.querySelectorAll(
   '.order-actions form'
 );
 
 async function updateOrder (event) {
   event.preventDefault();
-  const form = e.target;
+  const form = event.target;
 
-  const formData = new FormData(form);
+  const formData = new FormData(form); // built-in class that gives a get method to different parts of the form
   const newStatus = formData.get('status');
   const orderId = formData.get('orderid');
   const csrfToken = formData.get('_csrf');
@@ -34,7 +36,7 @@ async function updateOrder (event) {
     return;
   }
 
-  const responseData = await response.json();
+  const responseData = await response.json(); // extract the data which contains the info about the new order status
 
   form.parentElement.parentElement.querySelector('.badge').textContent =
     responseData.newStatus.toUpperCase();
