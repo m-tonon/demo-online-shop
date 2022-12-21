@@ -30,7 +30,7 @@ function updateCartItem (req, res) {
 
   const updatedItemData = cart.updateItem(
     req.body.productId, 
-    req.body.quantity) //method created at cart.model - update the cart item
+    +req.body.quantity) //method created at cart.model - update the cart item
 
   req.session.cart = cart // saves all into the session
 

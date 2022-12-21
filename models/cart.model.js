@@ -1,9 +1,56 @@
+const Product = require('./product.model');
+
 class Cart {
   constructor(items = [], totalQuantity = 0, totalPrice = 0) { 
     // a default value so if there isnt any on cart give an empty array
     this.items = items;
     this.totalQuantity = totalQuantity;
     this.totalPrice = totalPrice;
+  }
+
+  async updatePrices() { // keep the prices on the cart updated
+    const productIds = this.items.map(function (item) { // create a new array (.map) with the product ids of the cart items
+      return item.product.id; // the function will return the id of each item given, in the end its an array with product ids
+    });
+
+    const products = await Product.findMultiple(productIds); // method on product.model
+
+    const deletableCartItemProductIds = []; // const helper for delete cart items
+
+    for (const cartItem of this.items) { // loop for all the cart items
+      const product = products.find(function (prod){ // & find the matching product from the db on the products const above
+        return prod.id === cartItem.product.id; // prod is set automatically by JavaScript
+      }); // then when the product that belong to the cart is found we proceed
+
+      if(!product) { // not able to find - probably product was deleted 
+        // --> "schedule" for removal from cart
+        deletableCartItemProductIds.push(cartItem.product.id); // push the product id of the product that dont exists
+        continue; // & continue to the next code outside the loop
+      }
+
+      // if product was not deleted then update the product data (total price from the latest price from db)
+      cartItem.product = product; // overwrite the cart item product with the current product
+      cartItem.totalPrice = cartItem.quantity * cartItem.product.price; // then update to the current price
+    }
+
+    if (deletableCartItemProductIds.length > 0) { // now this will delete the 'schedule' deletion
+      this.items = this.items.filter(function (item) {
+        return deletableCartItemProductIds.indexOf(item.product.id) < 0; 
+        // indexOf search for a specific value in an array and return the index of it
+        // returns -1 if dont find the index - thats why < 0
+        // filter return true if cant find a product id 
+        // & false if it can be found, then it will be dropped from the array
+      });
+    }
+
+    // re-calculate cart totals after the deletion
+    this.totalQuantity = 0;
+    this.totalPrice = 0;
+
+    for (const item of this.items) { // run to all the items and change the quantity & price
+      this.totalQuantity = this.totalQuantity + item.quantity;
+      this.totalPrice = this.totalPrice + item.totalPrice;
+    }
   }
 
   addItem(product) {

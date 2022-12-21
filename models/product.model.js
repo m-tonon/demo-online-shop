@@ -52,6 +52,22 @@ class Product {
     }); 
   }
 
+  static async findMultiple(ids) {
+    const productIds = ids.map(function(id) {
+      return new mongodb.ObjectId(id);
+    }) // transform all these ids to mongodb object id - an array of strings into mongodb objects
+
+    const products = await db // run a query 
+    .getDb()
+    .collection('products')
+    .find({ _id: { $in: productIds} }) // $in will search for specified id in the given array - productIds
+    .toArray(); // all the products that belong to the ids found in the array will be fetched
+
+    return products.map(function (productDocument) {
+      return new Product(productDocument); // then convert that array of products into an array of products based of the blueprint
+    });
+  };
+
   updateImageData() {
     this.imagePath = `product-data/images/${this.image}`;
     this.imageUrl = `/products/assets/images/${this.image}`; // request the image from the server
