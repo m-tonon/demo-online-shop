@@ -42,7 +42,7 @@ class Order {
     .sort({_id: -1})
     .toArray();
 
-    return this.transformOrderDocument(orders);
+    return this.transformOrderDocuments(orders);
   }
 
   static async findAllForUser(userId) {

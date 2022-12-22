@@ -1,5 +1,3 @@
-const e = require("express");
-
 const updateOrderFormElements = document.querySelectorAll(
   '.order-actions form'
 );
